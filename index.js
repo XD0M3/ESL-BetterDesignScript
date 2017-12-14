@@ -20,6 +20,27 @@
             return id;
         }
 
+        static getTicketCreator(){
+            var creatorBracket = $('form[name="parentForm"]').find('table');
+            var strings = creatorBracket[0].children[0].children[2].innerText;
+            strings = strings.split("Requester	");
+            strings[1] = strings[1].split("	All");
+            strings[0]=strings[1][0];
+            var s = $("a[href*='yer']");
+            for(var i = 0; i < s.length;i++){
+               var io = s[i].innerText;
+               if(io == strings[0]){
+                 var e = s[i].href;
+                 e = e.split("/player/");
+                 e = e[1];
+                 e = e.split("/");
+                 e = e[0];
+                 strings[1] = e;
+               }
+            }
+            return strings;
+        }
+
     }
 
     class Page {
@@ -78,7 +99,8 @@
     }
 
     if(Page.isTicket()){
-       Information.getSupportId();
+       var id = Information.getSupportId();
+       var creator = Information.getTicketCreator();
        $('.defaultAnswerTexts').css("display","none");
 
     }
