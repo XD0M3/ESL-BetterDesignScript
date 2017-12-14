@@ -19,6 +19,88 @@
             var id = support.split("Support Ticket #")[1];
             return id;
         }
+//[2].children["0"].children[1]
+        static getAnswers(){
+          var answers = $(".esl-content").find("table");
+          console.log(answers);
+          var ik = answers[2].children["0"].childElementCount;
+          var an = [];
+          for(var ion = 1; ion < ik; ion++){
+
+            //[2].children["0"].children[1].children["0"]
+            var fromWho = answers[2].children["0"].children[ion].children["0"].innerText;
+            var who = "";
+            var ac = false;
+            var time = "";
+            //Who?
+            if(fromWho.indexOf("AC")!== -1){
+              who = fromWho.split("AC#");
+              ac = true;
+            } else {
+              who = fromWho.split("#");
+            }
+            who = who[0];
+            who = who.trim();
+            //time?
+            time = fromWho.split("|");
+            time = time[1];
+            time = time.trim();
+            //Nachricht
+            var nachricht = answers[2].children["0"].children[ion].children["1"].innerText;
+            //Screen
+            var screens = answers[2].children["0"].children[ion].children["2"].innerHTML;
+            //speichern
+            var zwi = [];
+            zwi["who"] = who;
+            zwi["ac"] = ac;
+            zwi["time"]=time;
+            zwi["nachricht"] = nachricht;
+            zwi["scre"]=screens
+            an[ion-1]=zwi;
+          }
+          console.log(an);
+        }
+
+        static getDates(){
+          var creatorBracket = $('form[name="parentForm"]').find('table');
+          var dateBrackets = creatorBracket[0].children[0].children[1];
+          var when = dateBrackets.children[0].innerText;
+          var change = dateBrackets.children[1].innerText;
+          when = when.split("created");
+          when = when[1];
+          change = change.split("changed");
+          change = change[1];
+          var back = [];
+          back[0]=when;
+          back[1]=change;
+          return back;
+        }
+
+        static getAdmin(){
+          var creatorBracket = $('form[name="parentForm"]').find('table');
+          var way = creatorBracket[0].children[0].children[1].children[2].innerText;
+          way = way.split("Admin");
+          way = way[1];
+          way = way.split("(unlock)");
+          way = way[0];
+          way = way.trim();
+          var lel = [];
+          lel[0] = way;
+          var ol = $("a[href*='yer']");
+          for(var i = 0; i < ol.length;i++){
+             var io = ol[i].innerText;
+             if(io == way){
+               var e = ol[i].href;
+               e = e.split("/player/");
+               e = e[1];
+               e = e.split("/");
+               e = e[0];
+               lel[1] = e;
+             }
+
+          }
+          return lel;
+        }
 
         static getTicketCreator(){
             var creatorBracket = $('form[name="parentForm"]').find('table');
@@ -37,6 +119,7 @@
                  e = e[0];
                  strings[1] = e;
                }
+
             }
             return strings;
         }
@@ -73,14 +156,13 @@
           tickets++;
       }
       }
-        console.log(tickets);
       //Other things
       table.addClass("table_esladdon");
       $('.TextS').css("font-size","10px");
       $('.TextSblack').css("font-size","10px");
       $('.table1_header').css("font-weight","700");
-      var squads = $('.TitleM').find('a');
       for(var x = 0; x < squads.length;x++){
+      var squads = $('.TitleM').find('a');
           var squad = squads[x].href;
           squad = squad.split("=");
           var squadid = squad[1];
@@ -95,14 +177,15 @@
          var f = u.join("");
          t[y].innerHTML = f;
      }
-     console.log(t);
+
     }
 
     if(Page.isTicket()){
        var id = Information.getSupportId();
        var creator = Information.getTicketCreator();
-       $('.defaultAnswerTexts').css("display","none");
-
+       var dates = Information.getDates();
+       var admin = Information.getAdmin();
+       var answers = Information.getAnswers();
     }
 
 })();
