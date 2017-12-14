@@ -12,7 +12,7 @@
     'use strict';
     //Add CSS Files
 
-    class Information {
+    class InformationSupport {
 
         static getSupportId(){
             var support = $('.TitleM').text();
@@ -32,6 +32,7 @@
             var who = "";
             var ac = false;
             var time = "";
+            var admin = false;
             //Who?
             if(fromWho.indexOf("AC")!== -1){
               who = fromWho.split("AC#");
@@ -49,6 +50,15 @@
             var nachricht = answers[2].children["0"].children[ion].children["1"].innerText;
             //Screen
             var screens = answers[2].children["0"].children[ion].children["2"].innerHTML;
+            screens = screens.split(' target="_blank">');
+            screens = screens[0];
+            screens = screens.split('<a href="');
+            screens = screens[1];
+            //Admin?
+            var ad = answers[2].children["0"].children[ion].children["3"].innerHTML;
+            if(ad.indexOf('sent.gif') !== -1){
+              admin = true;
+            }
             //speichern
             var zwi = [];
             zwi["who"] = who;
@@ -56,9 +66,10 @@
             zwi["time"]=time;
             zwi["nachricht"] = nachricht;
             zwi["scre"]=screens
+            zwi["admin"]=admin;
             an[ion-1]=zwi;
           }
-          console.log(an);
+          return an;
         }
 
         static getDates(){
@@ -181,11 +192,12 @@
     }
 
     if(Page.isTicket()){
-       var id = Information.getSupportId();
-       var creator = Information.getTicketCreator();
-       var dates = Information.getDates();
-       var admin = Information.getAdmin();
-       var answers = Information.getAnswers();
+       var id = InformationSupport.getSupportId();
+       var creator = InformationSupport.getTicketCreator();
+       var dates = InformationSupport.getDates();
+       var admin = InformationSupport.getAdmin();
+       var answers = InformationSupport.getAnswers();
+       console.log(answers);
     }
 
 })();
