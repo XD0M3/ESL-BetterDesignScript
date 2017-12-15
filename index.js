@@ -49,7 +49,7 @@
                 time = time[1];
                 time = time.trim();
 //Nachricht
-                var nachricht = answers[2].children["0"].children[ion].children["1"].innerText;
+                var nachricht = answers[2].children["0"].children[ion].children["1"].innerHTML;
 //Screen
                 var screens = answers[2].children["0"].children[ion].children["2"].innerHTML;
                 screens = screens.split(' target="_blank">');
@@ -313,18 +313,31 @@
           if(antwortNr == 0){
             $('.ticket-info').after(ticket);
           } else {
-            $('div[name="0"]').after(ticket);
+            $('div[name="' + (antwortNr-1) +'"]').after(ticket);
           }
           var anto = $('div[name="' + antwortNr + '"]');
           anto.find(".team-shortcut").text("");
           anto.find(".link").text(a[antwortNr]["who"]);
           anto.find(".date").text(a[antwortNr]["time"]);
           anto.find(".reply-id").text("#" + antwortNr);
-          anto.find(".reply").html(a[antwortNr]["nachricht"]);
+          var anse = a[antwortNr]["nachricht"];
+          anto.find(".reply").html(anse);
         }
-        //$('.esl-content').css("display","none");
+        //$('.esl-content').remove();
         //Moveinputs/clippings and more
         var code = $('html').html();
+        var inputs = [];
+        var str = code.split('<select name="default_answer_languages" id="defaultAnswerLanguages">');
+        var newstr = str[1];
+        newstr = newstr.split('</select><br><select data-language="bg" style="display:none; max-width: 350px;" class="defaultAnswerTexts">');
+        newstr = newstr[0];
+        inputs["lang"] = newstr;
+        str = code.split('<select data-language="bg" style="display:none; max-width: 350px;" class="defaultAnswerTexts">');
+        newstr = str[1];
+        newstr = newstr.split('');
+        newstr = newstr[0];
+        inputs["clip"] = newstr;
+        console.log(newstr);
 
     }
 
